@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import { useMe } from "../auth.api";
 
 type LoginContextType = {
   isLoggedIn: boolean;
@@ -20,7 +19,14 @@ export const LoginContextProvider = ({
 
   useEffect(() => {
     if (!!sessionStorage.getItem("token")) {
-      setIsLoggedIn(true);
+      const timestamp = sessionStorage.getItem("timestamp");
+      if (timestamp) {
+        const currentTime = new Date().getTime();
+        const timeDiff = currentTime - parseInt(timestamp);
+        if (timeDiff < 1000 * 60 * 55) {
+          setIsLoggedIn(true);
+        }
+      }
     }
   }, []);
 

@@ -15,7 +15,7 @@ enum AuthMode {
 }
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authMode, setAuthMode] = useState<AuthMode>(AuthMode.LOGIN);
 
@@ -25,15 +25,16 @@ export default function LoginPage() {
 
   const onAuthButtonClick = () => {
     if (authMode === AuthMode.LOGIN) {
-      login({ username, password });
+      login({ email, password });
     } else {
-      register({ username, password });
+      register({ email, password });
     }
   };
 
   useEffect(() => {
     if (loginData && loginData.token) {
       sessionStorage.setItem("token", loginData.token);
+      sessionStorage.setItem("timestamp", new Date().getTime().toString());
       setIsLoggedIn(true);
     }
   }, [loginData]);
@@ -41,6 +42,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (registerData && registerData.token) {
       sessionStorage.setItem("token", registerData.token);
+      sessionStorage.setItem("timestamp", new Date().getTime().toString());
       setIsLoggedIn(true);
     }
   }, [registerData]);
@@ -61,12 +63,14 @@ export default function LoginPage() {
       </ToggleButtonGroup>
       <Box display="flex" flexDirection="column" gap={2}>
         <TextField
-          label="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           label="Password"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
